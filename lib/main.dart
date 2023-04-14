@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unstop_ny/home_screen/home_screen.dart';
+import 'package:unstop_ny/home_screen/ola_type_map.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen()
+      home: const OlaMap()
     );
   }
 }

@@ -107,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.purple,
 
+
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -178,87 +179,86 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
 
 
-      body: Column(
-        children: [
-        GoogleMap(
-          zoomControlsEnabled: false,
-          //markers: markersList,
-          initialCameraPosition: _cameraPosition!, //initialize camera position for map
-          mapType: MapType.normal,
-          onCameraIdle: () {
-            //this function will trigger when user stop dragging on map
-            //every time user drag and stop it will display address
-            _getAddress(_draggedLatlng);
-          },
-          onCameraMove: (cameraPosition) {
-            //this function will trigger when user keep dragging on map
-            //every time user drag this will get value of latlng
-            _draggedLatlng = cameraPosition.target;
-          },
-          onMapCreated: (GoogleMapController controller) {
-            //this function will trigger when map is fully loaded
-            if (!_googleMapController.isCompleted) {
-              //set controller to google map when it is fully loaded
-              _googleMapController.complete(controller);
-            }
-          },
-        )
-        ],
+      body: GoogleMap(
+        zoomControlsEnabled: false,
+        //markers: markersList,
+        initialCameraPosition: _cameraPosition!, //initialize camera position for map
+        mapType: MapType.normal,
+        onCameraIdle: () {
+          //this function will trigger when user stop dragging on map
+          //every time user drag and stop it will display address
+          _getAddress(_draggedLatlng);
+        },
+        onCameraMove: (cameraPosition) {
+          //this function will trigger when user keep dragging on map
+          //every time user drag this will get value of latlng
+          _draggedLatlng = cameraPosition.target;
+        },
+        onMapCreated: (GoogleMapController controller) {
+          //this function will trigger when map is fully loaded
+          if (!_googleMapController.isCompleted) {
+            //set controller to google map when it is fully loaded
+            _googleMapController.complete(controller);
+          }
+        },
       ),
 
-      bottomNavigationBar:  SizedBox(
-        height: 192,
-        child: Column(
-          children: [
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children:  [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.arrow_right_alt),
-                                  SizedBox(width: 15),
-                                  Text('Where to?'),
-                                ],
+      floatingActionButton:  Padding(
+        padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+        child: SizedBox(
+          height: 192,
+          child: Column(
+            children: [
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    children:  [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.arrow_right_alt),
+                                    SizedBox(width: 15),
+                                    Text('Where to?'),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 20),
-                    Row(
-                      children:  [
-                        Expanded(
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20),
-                              child: Row(
-                                children: const [
-                                  Icon(Icons.history),
-                                  SizedBox(width: 15),
-                                  Text('UB City, KG Halli'),
-                                  Spacer(),
-                                  Icon(Icons.favorite_border),
-                                ],
+                        ],
+                      ),
+                      const SizedBox(width: 20),
+                      Row(
+                        children:  [
+                          Expanded(
+                            child: Card(
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Row(
+                                  children: const [
+                                    Icon(Icons.history),
+                                    SizedBox(width: 15),
+                                    Text('UB City, KG Halli'),
+                                    Spacer(),
+                                    Icon(Icons.favorite_border),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
