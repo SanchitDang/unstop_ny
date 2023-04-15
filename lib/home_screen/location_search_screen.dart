@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'components/location_list_tile.dart';
-import 'components/network_utility.dart';
-import 'constants.dart';
-import 'models/autocomplate_prediction.dart';
-import 'models/place_auto_complate_response.dart';
+import 'loc_search/components/location_list_tile.dart';
+import 'loc_search/components/network_utility.dart';
+import 'loc_search/constants.dart';
+import 'loc_search/models/autocomplate_prediction.dart';
+import 'loc_search/models/place_auto_complate_response.dart';
 
 class SearchLocationScreen extends StatefulWidget {
   const SearchLocationScreen({Key? key}) : super(key: key);
@@ -90,7 +90,6 @@ class _SearchLocationScreenState extends State<SearchLocationScreen> {
             child: ElevatedButton.icon(
               onPressed: () {
                 //placeAutoComplete("Dubai");
-
 
               },
               icon: Icon(Icons.location_on_outlined, color: Colors.black),

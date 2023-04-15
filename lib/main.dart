@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:unstop_ny/home_screen/loc_search/card_wid.dart';
+
 import 'package:unstop_ny/home_screen/ola_type_map.dart';
 import 'package:unstop_ny/home_screen/request_ride.dart';
 import 'package:unstop_ny/home_screen/test.dart';
