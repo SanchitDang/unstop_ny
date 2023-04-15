@@ -29,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
   String _draggedAddress = "";
 
 
-
   @override
   void initState() {
     _init();
@@ -100,13 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.purple,
-
 
       appBar: AppBar(
         backgroundColor: Colors.transparent,

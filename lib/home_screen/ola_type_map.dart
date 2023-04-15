@@ -11,6 +11,7 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:lottie/lottie.dart';
+import 'package:unstop_ny/home_screen/another_search_location.dart';
 
 class OlaMap extends StatefulWidget {
   const OlaMap({ Key? key }) : super(key: key);
@@ -22,7 +23,7 @@ class OlaMap extends StatefulWidget {
 class _OlaMapState extends State<OlaMap> {
 
   //Search
-  static const kGoogleApiKey = 'AIzaSyBJnW7uKl9qaMpvdZsLRvaY4HvYIg2FWsQ';
+  static const kGoogleApiKey = 'AIzaSyAfZTYWDvvhw53Zi4w_tmqhCYM6MWogBaE';
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
   final Mode _mode = Mode.overlay;
 
@@ -92,17 +93,17 @@ class _OlaMapState extends State<OlaMap> {
       children : [
         _getMap(),
         _getCustomPin(),
-        _showBotNav(),
+        _showUpNav(),
         Expanded(
     child: Align(
     alignment: Alignment.bottomCenter,
-    child: _showDraggedAddress(),
+    child: _showWhereToAddress(),
     ),)
       ]
     );
   }
 
-  Widget _showDraggedAddress() {
+  Widget _showWhereToAddress() {
     return SizedBox(
       height: 192,
       child: Column(
@@ -117,7 +118,7 @@ class _OlaMapState extends State<OlaMap> {
                     children: [
                       Expanded(
                         child: Card(
-                          color: Color.fromRGBO(43,45,58, 1),
+                          color: const Color.fromRGBO(43,45,58, 1),
                           child: Padding(
                             padding: const EdgeInsets.all(20),
                             child: Row(
@@ -162,27 +163,38 @@ class _OlaMapState extends State<OlaMap> {
     );
   }
 
-  Widget _showBotNav() {
+  Widget _showUpNav() {
     return SafeArea(
       bottom: true,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(10, 40, 10, 0),
-        child: Card(
-          elevation: 0,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {},
-                ),
-                const SizedBox(width: 10),
-                const Text(
-                  'Pick Up Location',
-                  style: TextStyle(fontSize: 20),
-                ),
-              ],
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+
+                          const PickAnotherLocation()
+                  ));
+          },
+          child: Card(
+            elevation: 0,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.menu),
+                    onPressed: () {},
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'Pick Up Location',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
