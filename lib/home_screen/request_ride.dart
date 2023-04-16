@@ -10,7 +10,13 @@ import 'get_dropMarkers.dart';
 import 'package:unstop_ny/home_screen/other_options.dart';
 
 class RequestARideScreen extends StatefulWidget {
-  RequestARideScreen({Key? key, required this.sLat, required this.sLng, required this.dLat, required this.dLng,}) : super(key: key);
+  RequestARideScreen({
+    Key? key,
+    required this.sLat,
+    required this.sLng,
+    required this.dLat,
+    required this.dLng,
+  }) : super(key: key);
 
   final double sLat;
   final double sLng;
@@ -22,7 +28,6 @@ class RequestARideScreen extends StatefulWidget {
 }
 
 class _RequestARideScreenState extends State<RequestARideScreen> {
-
   late Position _currentPosition;
   Future<void> getCurrLoc() async {
     _currentPosition = await Geolocator.getCurrentPosition();
@@ -47,7 +52,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
 //     LatLng(28.65467294129605, 77.15291607528403)
 //  ];
 
- List<LatLng> myLatLngList =[];
+  List<LatLng> myLatLngList = [];
 
   //To get data from button Selection
   List<DropMarker> myLatLngDropMarkers = getMarkers();
@@ -90,16 +95,12 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
     super.initState();
     getCurrLoc();
 
+    myLatLngList.add(
+      LatLng(widget.sLat, widget.sLng),
+    );
+    myLatLngList.add(LatLng(widget.dLat, widget.dLng));
 
-
-    myLatLngList.add(LatLng(widget.sLat , widget.sLng  ),);
-    myLatLngList.add(LatLng(widget.dLat, widget.dLng ));
-
-
-    setState(() {
-
-    });
-
+    setState(() {});
 
     //To get data from button Selection
     for (DropMarker marker in myLatLngDropMarkers) {
@@ -131,11 +132,8 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
     fetchDirections();
   }
 
-
-
   Widget _getMap() {
-    return
-     GoogleMap(
+    return GoogleMap(
       //polylines: polylinePoints,
       polylines: {
         for (var i = 0; i < _directionsList.length; i++)
@@ -152,6 +150,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
       scrollGesturesEnabled: false,
       rotateGesturesEnabled: false,
       zoomGesturesEnabled: false,
+      zoomControlsEnabled: false,
       markers: markers,
       initialCameraPosition: initialPosition,
       mapType: MapType.normal,
@@ -160,7 +159,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
         LatLngBounds bounds = LatLngBounds(
           // southwest: LatLng(28.653467836101004, 77.13154423515411),
           // northeast: LatLng(28.65467294129605, 77.15291607528403),
-            southwest: LatLng(widget.sLat , widget.sLng), // First coordinate
+          southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
           northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
         );
         controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 20.0));
@@ -169,15 +168,13 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
   }
 
   Widget _buildBody() {
-    return Stack(
-        children : [
-          _getMap(),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: _showWhereToAddress(),
-          )
-        ]
-    );
+    return Stack(children: [
+      _getMap(),
+      Align(
+        alignment: Alignment.bottomCenter,
+        child: _showWhereToAddress(),
+      )
+    ]);
   }
 
   Widget _showWhereToAddress() {
@@ -189,7 +186,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
-                children:  [
+                children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
@@ -229,18 +226,20 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                             // add your button press logic here
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => OtherOptions(sLng: widget.sLng,
-                              sLat: widget.sLat, dLng: widget.dLng,
-                              dLat: widget.dLat,)),
+                              MaterialPageRoute(
+                                  builder: (context) => OtherOptions(
+                                        sLng: widget.sLng,
+                                        sLat: widget.sLat,
+                                        dLng: widget.dLng,
+                                        dLat: widget.dLat,
+                                      )),
                             );
-
                           },
                           child: const Text('Public Transport'),
                         ),
                       ),
                     ],
                   ),
-
                   Row(
                     children: [
                       Expanded(
@@ -253,7 +252,6 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                       ),
                     ],
                   ),
-
                 ],
               ),
             ),
