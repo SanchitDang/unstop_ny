@@ -102,29 +102,37 @@ class _OlaMapState extends State<OlaMap> {
               padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Card(
-                          color: const Color.fromRGBO(43, 45, 58, 1),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Row(
-                              children: const [
-                                Icon(Icons.arrow_right_alt,
-                                    color: Color.fromRGBO(168, 142, 60, 1)),
-                                SizedBox(width: 15),
-                                Text('Where to?',
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(168, 142, 60, 1),
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500)),
-                              ],
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+              context,
+              MaterialPageRoute(
+              builder: (context) => const PickAnotherLocation()));
+                    },
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Card(
+                            color: const Color.fromRGBO(43, 45, 58, 1),
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.arrow_right_alt,
+                                      color: Color.fromRGBO(168, 142, 60, 1)),
+                                  SizedBox(width: 15),
+                                  Text('Where to?',
+                                      style: TextStyle(
+                                          color: Color.fromRGBO(168, 142, 60, 1),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500)),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(width: 20),
                   Row(
