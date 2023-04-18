@@ -121,216 +121,227 @@ class _OtherOptionsState extends State<OtherOptions> {
                   ),
                 ),
               ),
-              show
-                  ? Column(
-                      children: List.generate(
-                        ways.length,
+
+
+              AnimatedOpacity(
+                opacity: show ? 1.0 : 0.0,
+                duration: const Duration(milliseconds: 200),
+                child:   Column(
+                  children: List.generate(
+                    ways.length,
                         (index) => Column(
-                          children: [
-                            Card(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                                side: const BorderSide(
-                                  width: 2,
-                                  color: Color.fromRGBO(168, 142, 60, 1),
+                      children: [
+                        Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                            side: const BorderSide(
+                              width: 2,
+                              color: Color.fromRGBO(168, 142, 60, 1),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
+                            child: Row(
+                              children: [
+                                Column(
+                                  children: const [
+                                    SizedBox(
+                                      width: 34,
+                                    ),
+                                    SizedBox(
+                                      height:
+                                      80, // Add a height to the SizedBox
+                                      child: VerticalDivider(
+                                        width: 1,
+                                        thickness: 1,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 4,
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(8, 12, 8, 12),
-                                child: Row(
+                                ways[index]['walkable']
+                                    ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Column(
+                                    Row(
                                       children: const [
-                                        SizedBox(
-                                          width: 34,
-                                        ),
-                                        SizedBox(
-                                          height:
-                                              80, // Add a height to the SizedBox
-                                          child: VerticalDivider(
-                                            width: 1,
-                                            thickness: 1,
-                                            color: Colors.black,
+                                        Text(
+                                          "WALK",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 4,
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${ways[index]['transitDetails']['amountOfSteps']} steps",
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${ways[index]['distance']['text']}",
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Duration: ${ways[index]['duration']['text']}",
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                          ),
                                         ),
                                       ],
                                     ),
-                                    ways[index]['walkable']
-                                        ? Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: const [
-                                                  Text(
-                                                    "WALK",
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18.0,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "${ways[index]['transitDetails']['amountOfSteps']} steps",
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "${ways[index]['distance']['text']}",
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Duration: ${ways[index]['duration']['text']}",
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          )
-                                        : Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    ways[index]['transitDetails']['type'].toString().toUpperCase(),
-                                                    style: const TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 18.0,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "${ways[index]['transitDetails']['departureStop']['name'].toString().length > 18 ? ways[index]['transitDetails']['departureStop']['name'].toString().substring(0, 18) : ways[index]['transitDetails']['departureStop']['name']} -> ${ways[index]['transitDetails']['arrivalStop']['name'].toString().length > 18 ? ways[index]['transitDetails']['arrivalStop']['name'].toString().substring(0, 18) : ways[index]['transitDetails']['arrivalStop']['name']}",
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-
-
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    ways[index]['distance']['text'],
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Duration: ${ways[index]['duration']['text']}",
-                                                    style: const TextStyle(
-                                                      fontSize: 16.0,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                  ],
+                                )
+                                    : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Text(
+                                          ways[index]['transitDetails']['type'].toString().toUpperCase(),
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18.0,
                                           ),
+                                        )
+                                      ],
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${ways[index]['transitDetails']['departureStop']['name'].toString().length > 18 ? ways[index]['transitDetails']['departureStop']['name'].toString().substring(0, 18) : ways[index]['transitDetails']['departureStop']['name']} -> ${ways[index]['transitDetails']['arrivalStop']['name'].toString().length > 18 ? ways[index]['transitDetails']['arrivalStop']['name'].toString().substring(0, 18) : ways[index]['transitDetails']['arrivalStop']['name']}",
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+
+                                    Row(
+                                      children: [
+                                        Text(
+                                          ways[index]['distance']['text'],
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "Duration: ${ways[index]['duration']['text']}",
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
-                              ),
+                              ],
                             ),
-                            ways[index]['suggestRide']
-                                ?
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                        backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
-                                      ),
-                                      onPressed: () {},
-                                      child: const Text(
-                                        'In hurry? Book Auto Ride',
-                                        style: TextStyle(
-                                          color: Color.fromRGBO(168, 142, 60, 1)
-                                        ),
-                                      ),
+                          ),
+                        ),
+                        ways[index]['suggestRide']
+                            ?
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
+                                  ),
+                                  onPressed: () {},
+                                  child: const Text(
+                                    'In hurry? Book Auto Ride',
+                                    style: TextStyle(
+                                        color: Color.fromRGBO(168, 142, 60, 1)
                                     ),
                                   ),
                                 ),
-                              ],
-                            )
-                                :
-                            const SizedBox(),
-
-                            if(index < ways.length-1)
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 12.0),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 4,),
-
-                                      Container(
-                                        width: 15,
-                                        height: 15,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(color: const Color.fromRGBO(168, 142, 60, 1), width: 3),
-                                          color: Colors.transparent,
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 4,),
-
-                                      Container(
-                                        width: 15,
-                                        height: 15,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(color: const Color.fromRGBO(168, 142, 60, 1), width: 3),
-                                          color: Colors.transparent,
-                                        ),
-                                      ),
-
-                                      const SizedBox(height: 4,),
-
-                                    ],
-                                  ),
-                                ),
-                              )
-
+                              ),
+                            ),
                           ],
-                        ),
-                      ),
-                    )
-                  : const SizedBox()
+                        )
+                            :
+                        const SizedBox(),
+
+                        if(index < ways.length-1)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 4,),
+
+                                  Container(
+                                    width: 15,
+                                    height: 15,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: const Color.fromRGBO(168, 142, 60, 1), width: 3),
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 4,),
+
+                                  Container(
+                                    width: 15,
+                                    height: 15,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: const Color.fromRGBO(168, 142, 60, 1), width: 3),
+                                      color: Colors.transparent,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 4,),
+
+                                ],
+                              ),
+                            ),
+                          )
+
+                      ],
+                    ),
+                  ),
+                )
+              ),
+
+
+
+
+
+
+
             ],
           ),
         ),
