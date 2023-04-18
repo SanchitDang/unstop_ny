@@ -276,7 +276,9 @@ class _OtherOptionsState extends State<OtherOptions> {
                                     ),
                                     backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+
+                                  },
                                   child: const Text(
                                     'In hurry? Book Auto Ride',
                                     style: TextStyle(

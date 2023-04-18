@@ -179,18 +179,23 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
 
   Widget _showWhereToAddress() {
     return SizedBox(
-      height: 240,
+      height: 249,
       child: Column(
         children: [
           Card(
             child: Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Text("Request A Ride"),
+                      Text("Request Auto Ride",
+                          style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold
+                      ),
+                      ),
                     ],
                   ),
                   Row(
@@ -203,12 +208,17 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                             children: [
                               Row(
                                 children: const [
-                                  Text('Duration:'),
+                                  Text('₹100',
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w500
+                                  ),),
                                 ],
                               ),
+                              const SizedBox(height:5),
                               Row(
                                 children: const [
-                                  Text('Distance:'),
+                                  Text('x kms | y min'),
                                 ],
                               ),
                             ],
@@ -221,21 +231,32 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: ElevatedButton(
+                        child:
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
+                          ),
                           onPressed: () {
-                            // add your button press logic here
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => OtherOptions(
-                                        sLng: widget.sLng,
-                                        sLat: widget.sLat,
-                                        dLng: widget.dLng,
-                                        dLat: widget.dLat,
-                                      )),
+                                    sLng: widget.sLng,
+                                    sLat: widget.sLat,
+                                    dLng: widget.dLng,
+                                    dLat: widget.dLat,
+                                  )),
                             );
                           },
-                          child: const Text('Public Transport'),
+                          child: const Text(
+                            'Other Ways To Go',
+                            style: TextStyle(
+                                color: Color.fromRGBO(168, 142, 60, 1)
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -244,10 +265,19 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {
-                            // add your button press logic here
-                          },
-                          child: const Text('Book Auto Ride'),
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
+                          ),
+                          onPressed: () {},
+                          child: const Text(
+                            'Request Ride',
+                            style: TextStyle(
+                                color: Color.fromRGBO(168, 142, 60, 1)
+                            ),
+                          ),
                         ),
                       ),
                     ],
