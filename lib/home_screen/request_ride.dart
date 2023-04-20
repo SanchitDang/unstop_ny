@@ -162,10 +162,8 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
          southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
          northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
         );
-
         double lat = (bounds.northeast.latitude + bounds.southwest.latitude) / 2;
         double lng = (bounds.northeast.longitude + bounds.southwest.longitude) / 2;
-
         controller.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(
             //target: bounds.southwest, // Center of bounds
@@ -173,23 +171,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
             zoom: 14, // Zoom level
           ),
         ));
-
       },
-
-
-      // onMapCreated: (GoogleMapController controller) {
-      //  // _controller.complete(controller);
-      //   LatLngBounds bounds = LatLngBounds(
-      //     southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
-      //     northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
-      //     // southwest: LatLng(28.60888668986925, 77.04236144134947), // First coordinate
-      //     // northeast: LatLng(28.62900361572577, 77.08227270916433), // Second coordinate
-      //   );
-      //   controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 20.0));
-      //   _controller.complete(controller);
-      // },
-
-
     );
   }
 
