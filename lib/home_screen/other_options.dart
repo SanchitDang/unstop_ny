@@ -98,12 +98,22 @@ class _OtherOptionsState extends State<OtherOptions> {
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: Colors.black, // Set the color of the back button here
+          onPressed: () {
+            // Handle back button press here
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SingleChildScrollView(
           child: Column(
             children: [
+
+              //WAYS CARD
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -113,7 +123,12 @@ class _OtherOptionsState extends State<OtherOptions> {
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Column(
+                    child:
+                        ways.isEmpty
+                            ?
+                        const Center(child: CircularProgressIndicator( color: Colors.black,))
+                            :
+                        Column(
                       children: [
                         Row(
                           children: transitFlow.map((flow) {
@@ -223,7 +238,7 @@ class _OtherOptionsState extends State<OtherOptions> {
                             ),
                           ],
                         )
-          : SizedBox()
+          : const SizedBox()
 
                       ],
                     ),
@@ -233,6 +248,7 @@ class _OtherOptionsState extends State<OtherOptions> {
 
               const SizedBox(height: 4,),
 
+              //BELOW SUB CARDS
               AnimatedOpacity(
                 opacity: show ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 200),
@@ -462,12 +478,6 @@ class _OtherOptionsState extends State<OtherOptions> {
                   ),
                 )
               ),
-
-
-
-
-
-
 
             ],
           ),

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:unstop_ny/home_screen/finding_a_auto_ride.dart';
 import '../../../model/direction_model.dart';
 import '../../../model/directions_repository.dart';
 import '../model/polyline_response.dart';
@@ -280,14 +281,22 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                             backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
                           ),
                           onPressed: () {
-                            LatLngBounds bounds = LatLngBounds(
-                              // southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
-                              // northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
-                              southwest: LatLng(28.595308144478015, 77.0532471476376), //mcd
-                              northeast: LatLng(28.617235978914973, 77.10096900622817), // tihar
+
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const FindingAutoRideScreen()),
                             );
 
-                            print(bounds.contains(LatLng(28.596438557089765, 77.09942405397165)));
+
+                            // LatLngBounds bounds = LatLngBounds(
+                            //   // southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
+                            //   // northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
+                            //   southwest: LatLng(28.595308144478015, 77.0532471476376), //mcd
+                            //   northeast: LatLng(28.617235978914973, 77.10096900622817), // tihar
+                            // );
+                            //
+                            // print(bounds.contains(LatLng(28.596438557089765, 77.09942405397165)));
 
                           },
                           child: const Text(
