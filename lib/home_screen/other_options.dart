@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:unstop_ny/home_screen/request_ride.dart';
 
 class OtherOptions extends StatefulWidget {
   const OtherOptions({
@@ -26,6 +27,9 @@ class _OtherOptionsState extends State<OtherOptions> {
 
   List<dynamic> transitFlow = [];
   List<dynamic> ways = [];
+  Map<String,dynamic> desc = {};
+
+  bool suggestFullRide = false;
 
   Future<void> fetchData(
       double sLat, double sLng, double dLat, double dLng) async {
@@ -53,7 +57,17 @@ class _OtherOptionsState extends State<OtherOptions> {
         transitFlow.addAll(response.data['transitFlow']);
         print(transitFlow);
 
+        desc.addAll(response.data['desc']);
+        //desc.addAll(response.data);
+        print(desc);
+
         ways.addAll(response.data['way']);
+
+        setState(() {
+          suggestFullRide = response.data['suggestFullRide'];
+        });
+        print(suggestFullRide);
+
         print(ways[0]['distance']['text']);
       } else {
         // Error - handle it accordingly
@@ -99,29 +113,125 @@ class _OtherOptionsState extends State<OtherOptions> {
                 child: Card(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: transitFlow.map((flow) {
-                        if (flow == "WALKING") {
-                          return const Expanded(
-                            child: Icon(Icons.directions_walk),
-                          );
-                        } else if (flow == "BUS") {
-                          return const Expanded(
-                            child: Icon(Icons.bus_alert),
-                          );
-                        } else if (flow == "METRO") {
-                          return const Expanded(
-                            child: Icon(Icons.directions_train_outlined),
-                          );
-                        } else {
-                          return const SizedBox();
-                        }
-                      }).toList(),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: transitFlow.map((flow) {
+                            if (flow == "WALKING") {
+                              return const Expanded(
+                                child: Icon(Icons.directions_walk),
+                              );
+                            } else if (flow == "BUS") {
+                              return const Expanded(
+                                child: Icon(Icons.bus_alert),
+                              );
+                            } else if (flow == "METRO") {
+                              return const Expanded(
+                                child: Icon(Icons.directions_train_outlined),
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          }).toList(),
+                        ),
+
+                       desc.isEmpty ? const SizedBox() :
+                       Padding(
+                         padding: const EdgeInsets.fromLTRB(8, 10, 8, 2),
+                         child: Column(
+                            children: [
+                              Row(
+                                  children: [
+                                    Text(desc['duration']['text'],
+                                      style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w500
+                                      ),
+                                    ),
+
+                                  ]
+                              ),
+                              Row(
+                                  children: [
+                                    Text(desc['distance']['text'],
+                                      style: const TextStyle(
+                                          fontSize: 18,
+
+                                      ),
+                                    ),
+                                    const Spacer(),
+                                    Text(desc['fare']['text'],
+                                      style: const TextStyle(
+                                          fontSize: 18,
+
+                                      ),
+                                    ),
+                                  ]
+                              ),
+                              Row(
+                                  children: [
+                                    Text("${desc['departTime']['text']} -> ${desc['arrivalTime']['text']}",
+                                      style: const TextStyle(
+                                          fontSize: 18,
+
+                                      ),
+                                    ),
+
+                                  ]
+                              ),
+                            ],
+                          ),
+                       ),
+
+                        suggestFullRide ?    Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
+                                  ),
+                                  onPressed: () {
+
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>
+                                          RequestARideScreen(
+                                            sLat: desc['startLocation']['lat'],
+                                            sLng: desc['startLocation']['lng'],
+                                            dLat: desc['finalLocation']['lat'],
+                                            dLng: desc['finalLocation']['lng'],
+                                          )
+                                      ),
+                                    );
+
+
+                                  },
+                                  child: const Text(
+                                    'Too far? Book Auto Ride',
+                                    style: TextStyle(
+                                        color: Color.fromRGBO(168, 142, 60, 1)
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+          : SizedBox()
+
+                      ],
                     ),
                   ),
                 ),
               ),
 
+              const SizedBox(height: 4,),
 
               AnimatedOpacity(
                 opacity: show ? 1.0 : 0.0,
@@ -277,6 +387,21 @@ class _OtherOptionsState extends State<OtherOptions> {
                                     backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
                                   ),
                                   onPressed: () {
+
+
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) =>
+                                          RequestARideScreen(
+                                            sLat: ways[index]['startLocation']['lat'],
+                                            sLng: ways[index]['startLocation']['lng'],
+                                            dLat: ways[index]['finalLocation']['lat'],
+                                            dLng: ways[index]['finalLocation']['lng'],
+                                          )
+                                      ),
+                                    );
+
+
 
                                   },
                                   child: const Text(

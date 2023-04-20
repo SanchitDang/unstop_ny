@@ -35,8 +35,10 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
   }
 
   final Completer<GoogleMapController> _controller = Completer();
-  static const CameraPosition initialPosition = CameraPosition(
+
+  static CameraPosition initialPosition = CameraPosition(
       target: LatLng(28.640956116187407, 77.12170606332784), zoom: 14);
+
 
   String apiKey = "AIzaSyAfZTYWDvvhw53Zi4w_tmqhCYM6MWogBaE";
 
@@ -130,6 +132,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
     }
 
     fetchDirections();
+
   }
 
   Widget _getMap() {
@@ -155,15 +158,38 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
       initialCameraPosition: initialPosition,
       mapType: MapType.normal,
       onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
         LatLngBounds bounds = LatLngBounds(
-          // southwest: LatLng(28.653467836101004, 77.13154423515411),
-          // northeast: LatLng(28.65467294129605, 77.15291607528403),
-          southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
-          northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
+         southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
+         northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
         );
-        controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 20.0));
+
+        double lat = (bounds.northeast.latitude + bounds.southwest.latitude) / 2;
+        double lng = (bounds.northeast.longitude + bounds.southwest.longitude) / 2;
+
+        controller.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+            //target: bounds.southwest, // Center of bounds
+            target:  LatLng(lat, lng), // Center of bounds
+            zoom: 14, // Zoom level
+          ),
+        ));
+
       },
+
+
+      // onMapCreated: (GoogleMapController controller) {
+      //  // _controller.complete(controller);
+      //   LatLngBounds bounds = LatLngBounds(
+      //     southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
+      //     northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
+      //     // southwest: LatLng(28.60888668986925, 77.04236144134947), // First coordinate
+      //     // northeast: LatLng(28.62900361572577, 77.08227270916433), // Second coordinate
+      //   );
+      //   controller.animateCamera(CameraUpdate.newLatLngBounds(bounds, 20.0));
+      //   _controller.complete(controller);
+      // },
+
+
     );
   }
 
@@ -208,7 +234,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                             children: [
                               Row(
                                 children: const [
-                                  Text('₹100',
+                                  Text('₹pqr',
                                     style: TextStyle(
                                       fontSize: 28,
                                       fontWeight: FontWeight.w500
@@ -271,7 +297,17 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                             ),
                             backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            LatLngBounds bounds = LatLngBounds(
+                              // southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
+                              // northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
+                              southwest: LatLng(28.595308144478015, 77.0532471476376), //mcd
+                              northeast: LatLng(28.617235978914973, 77.10096900622817), // tihar
+                            );
+
+                            print(bounds.contains(LatLng(28.596438557089765, 77.09942405397165)));
+
+                          },
                           child: const Text(
                             'Request Ride',
                             style: TextStyle(
