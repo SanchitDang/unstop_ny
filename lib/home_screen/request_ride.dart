@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:unstop_ny/home_screen/car_pool_screen.dart';
 import 'package:unstop_ny/home_screen/finding_a_auto_ride.dart';
 import '../../../model/direction_model.dart';
 import '../../../model/directions_repository.dart';
@@ -29,6 +30,39 @@ class RequestARideScreen extends StatefulWidget {
 }
 
 class _RequestARideScreenState extends State<RequestARideScreen> {
+
+  Future<void> _delayedPop(BuildContext context, dynamic data) async {
+    unawaited(
+      Navigator.of(context, rootNavigator: true).push(
+        PageRouteBuilder(
+          pageBuilder: (_, __, ___) => WillPopScope(
+            onWillPop: () async => false,
+            child: const Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Center(
+                child: CircularProgressIndicator.adaptive(),
+              ),
+            ),
+          ),
+          transitionDuration: Duration.zero,
+          barrierDismissible: false,
+          barrierColor: Colors.black45,
+          opaque: false,
+        ),
+      ),
+    );
+    await Future.delayed(const Duration(milliseconds: 1000));
+    Navigator.of(context)
+      ..pop(data)
+      ..pop(data);
+  }
+
+
+
+
+
+
+
   late Position _currentPosition;
   Future<void> getCurrLoc() async {
     _currentPosition = await Geolocator.getCurrentPosition();
@@ -159,15 +193,24 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
       initialCameraPosition: initialPosition,
       mapType: MapType.normal,
       onMapCreated: (GoogleMapController controller) {
-        LatLngBounds bounds = LatLngBounds(
-         southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
-         northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
-        );
+        LatLngBounds bounds;
+         try {
+           bounds = LatLngBounds(
+           southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
+           northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
+           );
+         } catch (e) {
+           // TODO
+           bounds = LatLngBounds(
+             southwest: LatLng(widget.dLat, widget.dLng), // First coordinate
+             northeast: LatLng(widget.sLat, widget.sLng), // Second coordinate
+           );
+         }
+
         double lat = (bounds.northeast.latitude + bounds.southwest.latitude) / 2;
         double lng = (bounds.northeast.longitude + bounds.southwest.longitude) / 2;
         controller.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(
-            //target: bounds.southwest, // Center of bounds
             target:  LatLng(lat, lng), // Center of bounds
             zoom: 14, // Zoom level
           ),
@@ -188,7 +231,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
 
   Widget _showWhereToAddress() {
     return SizedBox(
-      height: 249,
+      height: 297,
       child: Column(
         children: [
           Card(
@@ -273,6 +316,36 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                   Row(
                     children: [
                       Expanded(
+                        child:
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CarPoolScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng)
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Look For Car pools',
+                            style: TextStyle(
+                                color: Color.fromRGBO(168, 142, 60, 1)
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -285,8 +358,8 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
 
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const FindingAutoRideScreen()),
-                            );
+                              MaterialPageRoute(builder: (context) => FindingAutoRideScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng)
+                            ));
 
 
                             // LatLngBounds bounds = LatLngBounds(
@@ -320,8 +393,14 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(),
+    return WillPopScope(
+      onWillPop: () {
+        _delayedPop(context, "");
+        return Future.value(true);
+      },
+      child: Scaffold(
+        body: _buildBody(),
+      ),
     );
   }
 }

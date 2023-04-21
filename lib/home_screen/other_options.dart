@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:unstop_ny/home_screen/request_ride.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OtherOptions extends StatefulWidget {
   const OtherOptions({
@@ -24,6 +25,7 @@ class OtherOptions extends StatefulWidget {
 
 class _OtherOptionsState extends State<OtherOptions> {
   bool show = false;
+  bool showCar = false;
 
   List<dynamic> transitFlow = [];
   List<dynamic> ways = [];
@@ -31,9 +33,9 @@ class _OtherOptionsState extends State<OtherOptions> {
 
   bool suggestFullRide = false;
 
-  Future<void> fetchData(
+  Future<void> fetchDataPublicRoute(
       double sLat, double sLng, double dLat, double dLng) async {
-    const url = 'https://ny-backend.onrender.com/api';
+    const url = 'https://ny-backend.onrender.com/publicroute';
     final data = {
       'source_lat': sLat,
       'source_lng': sLng,
@@ -78,11 +80,49 @@ class _OtherOptionsState extends State<OtherOptions> {
     }
   }
 
+
+  List<dynamic> carWays = [];
+  Map<String,dynamic> carDesc = {};
+
+  Future<void> fetchDataDriveRoute(
+      double sLat, double sLng, double dLat, double dLng) async {
+    const url = 'https://ny-backend.onrender.com/driveroute';
+    final data = {
+      'source_lat': sLat,
+      'source_lng': sLng,
+      'dest_lat': dLat,
+      'dest_lng': dLng
+    };
+
+    try {
+      final response = await Dio().post(
+        url,
+        data: jsonEncode(data),
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        // Success!
+        carDesc.addAll(response.data['desc']);
+        carWays.addAll(response.data['way']);
+      } else {
+        // Error - handle it accordingly
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     // TODO: implement initState
-    fetchData(widget.sLat, widget.sLng, widget.dLat, widget.dLng)
+    fetchDataPublicRoute(widget.sLat, widget.sLng, widget.dLat, widget.dLng)
+        .then((value) => setState(() {}));
+    fetchDataDriveRoute(widget.sLat, widget.sLng, widget.dLat, widget.dLng)
         .then((value) => setState(() {}));
   }
 
@@ -249,10 +289,11 @@ class _OtherOptionsState extends State<OtherOptions> {
               const SizedBox(height: 4,),
 
               //BELOW SUB CARDS
-              AnimatedOpacity(
+              show ? AnimatedOpacity(
                 opacity: show ? 1.0 : 0.0,
                 duration: const Duration(milliseconds: 200),
-                child:   Column(
+                child:
+                Column(
                   children: List.generate(
                     ways.length,
                         (index) => Column(
@@ -477,7 +518,72 @@ class _OtherOptionsState extends State<OtherOptions> {
                     ),
                   ),
                 )
+
+
+              ) : SizedBox(),
+
+              //Car Card
+              GestureDetector(
+                onTap: () async {
+                  //OPEN MAPS
+                  await launchUrl(Uri.parse(
+                      'google.navigation:q=${carDesc['finalLocation']['lat']},${carDesc['finalLocation']['lng']}&origin=${carDesc['startLocation']['lat']},${carDesc['startLocation']['lng']}&key=AIzaSyAfZTYWDvvhw53Zi4w_tmqhCYM6MWogBaE'));
+                },
+                child: Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child:
+                    carWays.isEmpty
+                        ?
+                    const Center(child: CircularProgressIndicator( color: Colors.black,))
+                        :
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                             Icon(Icons.directions_car_outlined)
+                          ]
+                        ),
+
+                        carDesc.isEmpty ? const SizedBox() :
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(8, 10, 8, 2),
+                          child: Column(
+                            children: [
+                              Row(
+                                  children: [
+                                    Text(carDesc['duration']['text'],
+                                      style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w500
+                                      ),
+                                    ),
+
+                                  ]
+                              ),
+                              Row(
+                                  children: [
+                                    Text(carDesc['distance']['text'],
+                                      style: const TextStyle(
+                                        fontSize: 18,
+
+                                      ),
+                                    ),
+                                  ]
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ),
+                ),
               ),
+
+              const SizedBox(height: 4,),
+
 
             ],
           ),
@@ -486,13 +592,3 @@ class _OtherOptionsState extends State<OtherOptions> {
     );
   }
 }
-
-// Row(
-//   children: [
-//     Icon(Icons.directions_walk),
-//     Spacer(),
-//     Icon(Icons.bus_alert),
-//     Spacer(),
-//     Icon(Icons.directions_car_outlined),
-//   ],
-// ),

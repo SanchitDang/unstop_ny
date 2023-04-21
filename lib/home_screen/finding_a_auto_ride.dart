@@ -1,13 +1,68 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class FindingAutoRideScreen extends StatefulWidget {
-  const FindingAutoRideScreen({Key? key}) : super(key: key);
+  const FindingAutoRideScreen({
+    Key? key,
+    required this.sLat,
+    required this.sLng,
+    required this.dLat,
+    required this.dLng,
+  }) : super(key: key);
+
+  final double sLat;
+  final double sLng;
+  final double dLat;
+  final double dLng;
 
   @override
   State<FindingAutoRideScreen> createState() => _FindingAutoRideScreenState();
 }
 
 class _FindingAutoRideScreenState extends State<FindingAutoRideScreen> {
+
+  Future<void> sendDataDriveRoute(
+      double sLat, double sLng, double dLat, double dLng) async {
+    const url = 'https://ny-backend.onrender.com/postride';
+    final data = {
+      'sourceLat': sLat,
+      'sourceLng': sLng,
+      'destLat': dLat,
+      'destLng': dLng,
+      'startTime': DateTime.now().millisecondsSinceEpoch ~/ 1000
+    };
+
+    try {
+      final response = await Dio().post(
+        url,
+        data: jsonEncode(data),
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      if (response.statusCode == 201) {
+        // Success!
+        print('Sent Successful');
+      } else {
+        // Error - handle it accordingly
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    sendDataDriveRoute(widget.sLat,  widget.sLng,  widget.dLat,  widget.dLng);
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
