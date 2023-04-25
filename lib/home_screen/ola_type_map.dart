@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:lottie/lottie.dart';
 import 'package:unstop_ny/home_screen/another_search_location.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OlaMap extends StatefulWidget {
   const OlaMap({Key? key}) : super(key: key);
@@ -18,6 +19,11 @@ class OlaMap extends StatefulWidget {
 }
 
 class _OlaMapState extends State<OlaMap> {
+
+  // Declare variables to store the name value and the SharedPreferences instance
+  String _name = "";
+  late SharedPreferences _prefs;
+
   //Search
   static const kGoogleApiKey = 'AIzaSyAfZTYWDvvhw53Zi4w_tmqhCYM6MWogBaE';
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,10 +38,30 @@ class _OlaMapState extends State<OlaMap> {
 
   @override
   void initState() {
-    _init();
     super.initState();
+    _getName();
+    _init();
+
+
+  }
+  // Get the name value from SharedPreferences
+  void _getName() async {
+    _prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _name = _prefs.getString('name') ?? '';
+    });
+    print(_name);
   }
 
+  // Save the name value to SharedPreferences
+  void _saveName(String name) async {
+    setState(() {
+      _name = name;
+    });
+    print(_name);
+
+    await _prefs.setString('name', name);
+  }
   _init() {
     //set default latlng for camera position
     _defaultLatLng = const LatLng(12.971650844979392, 77.59482598956737);
@@ -51,32 +77,8 @@ class _OlaMapState extends State<OlaMap> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: buildAppBar(context, 'Pick up'),
       body: _buildBody(),
-      //get a float button to click and Save current location
-      // floatingActionButton:  Container(
-      //   width:  double.infinity,
-      //   height: 44,
-      //   padding: const EdgeInsets.fromLTRB(32, 0, 0, 0),
-      //   child: ElevatedButton(
-      //     style: ElevatedButton.styleFrom(
-      //       shape: RoundedRectangleBorder(
-      //         borderRadius: BorderRadius.circular(10),
-      //       ),
-      //       primary: Colors.black,
-      //     ),
-      //     child: const Text('Save Location'),
-      //     onPressed: () async {
-      //       //Set data in db
-      //       Map<String, dynamic> homeMap = {
-      //         "lat": _draggedLatlng.latitude,
-      //         "long": _draggedLatlng.longitude,
-      //       };
-      //
-      //       //_gotoUserCurrentPosition();
-      //     },
-      //   ),
-      // ),
+
     );
   }
 
@@ -177,7 +179,8 @@ class _OlaMapState extends State<OlaMap> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const PickAnotherLocation()));
+                    builder: (context) => const PickAnotherLocation())
+            );
           },
           child: Card(
             elevation: 0,
@@ -187,7 +190,39 @@ class _OlaMapState extends State<OlaMap> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.menu),
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Enter Your Name'),
+                            content: TextField(
+                              decoration: InputDecoration(
+                                hintText: 'Your Name',
+                              ),
+                              onChanged: (value) {
+                                _name = value;
+                              },
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                              TextButton(
+                                child: Text('Save'),
+                                onPressed: () {
+                                  _saveName(_name);
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                   const SizedBox(width: 10),
                   const Text(

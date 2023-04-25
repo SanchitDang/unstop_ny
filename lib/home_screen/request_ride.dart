@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:unstop_ny/home_screen/car_pool_screen.dart';
@@ -31,6 +33,47 @@ class RequestARideScreen extends StatefulWidget {
 
 class _RequestARideScreenState extends State<RequestARideScreen> {
 
+  int dist = 0;
+  String distShow = '';
+  String time = '';
+
+  Future<void> fetchDistance() async {
+    const url = 'https://ny-backend.onrender.com/publicroute';
+    final data = {
+      'source_lat': widget.sLat,
+      'source_lng': widget.sLng,
+      'dest_lat': widget.dLat,
+      'dest_lng': widget.dLng
+    };
+
+    try {
+      final response = await Dio().post(
+        url,
+        data: jsonEncode(data),
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        // Success!
+ setState(() {
+   dist = response.data['desc']['distance']['value'];
+   distShow = response.data['desc']['distance']['text'];
+   time = response.data['desc']['duration']['text'];
+ });
+
+ print(dist);
+ print(distShow);
+      } else {
+        // Error - handle it accordingly
+        print('Error fetching data: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
   Future<void> _delayedPop(BuildContext context, dynamic data) async {
     unawaited(
       Navigator.of(context, rootNavigator: true).push(
@@ -56,11 +99,6 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
       ..pop(data)
       ..pop(data);
   }
-
-
-
-
-
 
 
   late Position _currentPosition;
@@ -131,6 +169,8 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
     // TODO: implement initState
     super.initState();
     getCurrLoc();
+
+    fetchDistance();
 
     myLatLngList.add(
       LatLng(widget.sLat, widget.sLng),
@@ -269,8 +309,8 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                               ),
                               const SizedBox(height:5),
                               Row(
-                                children: const [
-                                  Text('x kms | y min'),
+                                children:  [
+                                  Text('$distShow | $time'),
                                 ],
                               ),
                             ],
@@ -354,22 +394,50 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                             backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
                           ),
                           onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: const Text('Pool'),
+                                  content: const Text('Are you open to pooling?'),
+                                  actions: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
+                                      ),
+                                      onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => FindingAutoRideScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng, distance: dist, openToCarPool: true,)
+                                          )),
+                                      child: const Text('Yes',
+                                style: TextStyle(
+                                color: Color.fromRGBO(168, 142, 60, 1)
+                                ),),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(6),
+                                        ),
+                                        backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
+                                      ),
+                                      onPressed: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => FindingAutoRideScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng, distance: dist, openToCarPool: false,)
+                                          )),
+                                      child: const Text('No',
+                                        style: TextStyle(
+                                            color: Color.fromRGBO(168, 142, 60, 1)
+                                        ),),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
 
-
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => FindingAutoRideScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng)
-                            ));
-
-
-                            // LatLngBounds bounds = LatLngBounds(
-                            //   // southwest: LatLng(widget.sLat, widget.sLng), // First coordinate
-                            //   // northeast: LatLng(widget.dLat, widget.dLng), // Second coordinate
-                            //   southwest: LatLng(28.595308144478015, 77.0532471476376), //mcd
-                            //   northeast: LatLng(28.617235978914973, 77.10096900622817), // tihar
-                            // );
-                            //
-                            // print(bounds.contains(LatLng(28.596438557089765, 77.09942405397165)));
 
                           },
                           child: const Text(

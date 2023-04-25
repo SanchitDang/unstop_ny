@@ -234,6 +234,7 @@ class _OtherOptionsState extends State<OtherOptions> {
 
                                   ]
                               ),
+
                             ],
                           ),
                        ),
@@ -374,6 +375,44 @@ class _OtherOptionsState extends State<OtherOptions> {
                                         ),
                                       ],
                                     ),
+                                    Row(
+                                        children: [
+                                          Text(
+                                            "${ways[index]['instruction'].toString().length > 30 ? ways[index]['instruction'].toString().substring(0, 30) : ways[index]['instruction']}",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+                                            ),
+                                          ),
+
+
+                                        ]
+                                    ),
+                                    Row(
+                                      children: [
+                                        ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
+                                          ),
+                                          onPressed: () async {
+                                            await launchUrl(Uri.parse(
+                                                'google.navigation:q=${ways[index]['finalLocation']['lat']},${ways[index]['finalLocation']['lng']}&origin=${ways[index]['startLocation']['lat']},${ways[index]['startLocation']['lng']}&key=AIzaSyAfZTYWDvvhw53Zi4w_tmqhCYM6MWogBaE'
+                                            )
+                                            );
+
+
+                                          },
+                                          child: const Text(
+                                            'Open in Maps',
+                                            style: TextStyle(
+                                                color: Color.fromRGBO(168, 142, 60, 1)
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    )
                                   ],
                                 )
                                     : Column(
@@ -388,6 +427,17 @@ class _OtherOptionsState extends State<OtherOptions> {
                                             fontSize: 18.0,
                                           ),
                                         )
+                                      ],
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${ways[index]['transitDetails']['transitName']}",
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                          ),
+                                        ),
                                       ],
                                     ),
 
@@ -422,6 +472,18 @@ class _OtherOptionsState extends State<OtherOptions> {
                                           ),
                                         ),
                                       ],
+                                    ),
+                                    Row(
+                                        children: [
+                                          Text(
+                                            "${ways[index]['instruction'].toString().length > 30 ? ways[index]['instruction'].toString().substring(0, 30) : ways[index]['instruction']}",
+                                            style: const TextStyle(
+                                              fontSize: 18,
+
+                                            ),
+                                          ),
+
+                                        ]
                                     ),
                                   ],
                                 ),

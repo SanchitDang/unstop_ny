@@ -9,13 +9,15 @@ class FindingAutoRideScreen extends StatefulWidget {
     required this.sLat,
     required this.sLng,
     required this.dLat,
-    required this.dLng,
+    required this.dLng, required this.distance, required this.openToCarPool,
   }) : super(key: key);
 
   final double sLat;
   final double sLng;
   final double dLat;
   final double dLng;
+  final int distance;
+  final bool openToCarPool;
 
   @override
   State<FindingAutoRideScreen> createState() => _FindingAutoRideScreenState();
@@ -27,6 +29,10 @@ class _FindingAutoRideScreenState extends State<FindingAutoRideScreen> {
       double sLat, double sLng, double dLat, double dLng) async {
     const url = 'https://ny-backend.onrender.com/postride';
     final data = {
+      'riderName': "Abhay",
+      'gender': "Male",
+      'distance': widget.distance,
+      'openToCarPool': widget.openToCarPool,
       'sourceLat': sLat,
       'sourceLng': sLng,
       'destLat': dLat,
@@ -71,7 +77,7 @@ class _FindingAutoRideScreenState extends State<FindingAutoRideScreen> {
         elevation: 0,
         centerTitle: true,
         title: const Text(
-          "Finding Auto",
+          "Booking",
           style: TextStyle(
               color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18),
         ),
@@ -85,7 +91,7 @@ class _FindingAutoRideScreenState extends State<FindingAutoRideScreen> {
         ),
       ),
       body: const Center(
-          child: Text("Finding auto...",
+          child: Text("Ride Booked...",
             style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w500
