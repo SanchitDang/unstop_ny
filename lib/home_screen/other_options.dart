@@ -397,6 +397,11 @@ class _OtherOptionsState extends State<OtherOptions> {
                                             backgroundColor: const Color.fromRGBO(43, 45, 58, 1),
                                           ),
                                           onPressed: () async {
+                                            print(ways[index]['startLocation']['lat']);
+                                            print(ways[index]['startLocation']['lng']);
+                                            print(ways[index]['finalLocation']['lat']);
+                                            print(ways[index]['finalLocation']['lng']);
+                                            print("wefwefwefwefaqkjhn8fuyh79uoiye547tywum5jtuq3yijuw4py56u");
                                             await launchUrl(Uri.parse(
                                                 'google.navigation:q=${ways[index]['finalLocation']['lat']},${ways[index]['finalLocation']['lng']}&origin=${ways[index]['startLocation']['lat']},${ways[index]['startLocation']['lng']}&key=AIzaSyAfZTYWDvvhw53Zi4w_tmqhCYM6MWogBaE'
                                             )
