@@ -9,7 +9,7 @@ class FindingAutoRideScreen extends StatefulWidget {
     required this.sLat,
     required this.sLng,
     required this.dLat,
-    required this.dLng, required this.distance, required this.openToCarPool,
+    required this.dLng, required this.distance, required this.openToCarPool, required this.duration,
   }) : super(key: key);
 
   final double sLat;
@@ -17,6 +17,7 @@ class FindingAutoRideScreen extends StatefulWidget {
   final double dLat;
   final double dLng;
   final int distance;
+  final int duration;
   final bool openToCarPool;
 
   @override
@@ -32,6 +33,7 @@ class _FindingAutoRideScreenState extends State<FindingAutoRideScreen> {
       'riderName': "Abhay",
       'gender': "Male",
       'distance': widget.distance,
+      'duration': widget.duration,
       'openToCarPool': widget.openToCarPool,
       'sourceLat': sLat,
       'sourceLng': sLng,

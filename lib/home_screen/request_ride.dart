@@ -35,7 +35,8 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
 
   int dist = 0;
   String distShow = '';
-  String time = '';
+  String timeShow = '';
+  int time = 0;
 
   Future<void> fetchDistance() async {
     const url = 'https://ny-backend.onrender.com/publicroute';
@@ -59,8 +60,9 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
         // Success!
  setState(() {
    dist = response.data['desc']['distance']['value'];
+   time = response.data['desc']['duration']['value'];
    distShow = response.data['desc']['distance']['text'];
-   time = response.data['desc']['duration']['text'];
+   timeShow = response.data['desc']['duration']['text'];
  });
 
  print(dist);
@@ -249,19 +251,21 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
 
         double lat = (bounds.northeast.latitude + bounds.southwest.latitude) / 2;
         double lng = (bounds.northeast.longitude + bounds.southwest.longitude) / 2;
+
         controller.animateCamera(CameraUpdate.newCameraPosition(
           CameraPosition(
             target:  LatLng(lat, lng), // Center of bounds
-            zoom: 14, // Zoom level
+            zoom: (dist>1200) ? 12 : 14, // Zoom level
           ),
         ));
+
       },
     );
   }
 
   Widget _buildBody() {
-    return Stack(children: [
-      _getMap(),
+    return Column(children: [
+      Expanded(child: _getMap()),
       Align(
         alignment: Alignment.bottomCenter,
         child: _showWhereToAddress(),
@@ -310,7 +314,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                               const SizedBox(height:5),
                               Row(
                                 children:  [
-                                  Text('$distShow | $time'),
+                                  Text('$distShow | $timeShow'),
                                 ],
                               ),
                             ],
@@ -410,7 +414,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                                       ),
                                       onPressed: () => Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => FindingAutoRideScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng, distance: dist, openToCarPool: true,)
+                                          MaterialPageRoute(builder: (context) => FindingAutoRideScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng, distance: dist, openToCarPool: true, duration: time,)
                                           )),
                                       child: const Text('Yes',
                                 style: TextStyle(
@@ -426,7 +430,7 @@ class _RequestARideScreenState extends State<RequestARideScreen> {
                                       ),
                                       onPressed: () => Navigator.push(
                                           context,
-                                          MaterialPageRoute(builder: (context) => FindingAutoRideScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng, distance: dist, openToCarPool: false,)
+                                          MaterialPageRoute(builder: (context) => FindingAutoRideScreen(sLat: widget.sLat, sLng: widget.sLng, dLat: widget.dLat, dLng: widget.dLng, distance: dist, openToCarPool: false, duration: time,)
                                           )),
                                       child: const Text('No',
                                         style: TextStyle(
